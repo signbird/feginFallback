@@ -1,0 +1,4 @@
+spring:
+  application:
+    name: content-query
+    index: ${random.long}

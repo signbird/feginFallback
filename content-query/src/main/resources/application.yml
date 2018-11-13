@@ -1,0 +1,19 @@
+server:
+  port: 10002
+  tomcat:
+    accept-count: 10000
+    max-connections: 1000
+    max-threads: 500
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    prefer-ip-address: true
+  client:
+    useHeadlessService: false
+    registryFetchIntervalSeconds: 5
+    instanceInfoReplicationIntervalSeconds: 5
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    cache-refresh-executor-thread-pool-size: 10
