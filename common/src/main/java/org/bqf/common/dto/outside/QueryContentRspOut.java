@@ -1,4 +1,4 @@
-package org.bqf.content.dto;
+package org.bqf.common.dto.outside;
 
 import org.bqf.common.dto.BaseRsp;
 import org.bqf.common.dto.Result;
@@ -19,18 +19,15 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class GetContentRsp extends BaseRsp{
-    
+public class QueryContentRspOut extends BaseRsp {
+
     private static final long serialVersionUID = 1L;
-    
+
     @Builder
-    public GetContentRsp(Result result, String content) {
+    public QueryContentRspOut(Result result, String contentInfo) {
         super(result);
-        this.content = content;
+        this.contentInfo = contentInfo;
     }
 
-    /**
-     * 内容信息
-     */
-	private String content;
+    private String contentInfo;
 }

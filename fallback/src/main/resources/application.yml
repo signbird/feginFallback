@@ -1,0 +1,68 @@
+server:
+  port: 10003
+  tomcat:
+    accept-count: 10000
+    max-connections: 1000
+    max-threads: 500
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 10
+    prefer-ip-address: true
+  client:
+    useHeadlessService: false
+    registryFetchIntervalSeconds: 5
+    instanceInfoReplicationIntervalSeconds: 5
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+    cache-refresh-executor-thread-pool-size: 10
+
+feign:
+  hystrix:
+    enabled: true
+    
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 1000
+            
+spring:
+    datasource:
+      name: bqfDB
+      url: jdbc:mysql://localhost:3306/bqftest?characterEncoding=utf8&useSSL=true
+      username: bqf
+      password: Admin@123
+#      name: rstoneDB
+#      url: jdbc:mysql://10.181.12.83:4307/dev_rstone?characterEncoding=utf8&useSSL=true
+#      username: u_dev_rstone
+#      password: RsT@018_+10
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      filters: stat
+      initialSize: 1
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+      timeBetweenEvictionRunsMillis: 60000
+      # 配置一个连接在池中最小生存的时间，单位是毫秒
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+
+logging:
+  file: fallback.log
+  level:
+    org.bqf: DEBUG
+    org.springframework: WARN
+
+    
+    

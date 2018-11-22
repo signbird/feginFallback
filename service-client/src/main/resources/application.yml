@@ -17,3 +17,6 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
     cache-refresh-executor-thread-pool-size: 10
+    
+fallback: 
+  useFallbackConfig: true

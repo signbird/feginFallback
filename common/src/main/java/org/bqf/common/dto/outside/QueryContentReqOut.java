@@ -1,8 +1,8 @@
-package org.bqf.content.dto;
+
+package org.bqf.common.dto.outside;
 
 import org.bqf.common.dto.BaseReq;
 import org.bqf.common.dto.Header;
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
@@ -21,20 +21,25 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class GetContentReq extends BaseReq{
-    
+public class QueryContentReqOut extends BaseReq {
+
     private static final long serialVersionUID = 1L;
 
     @Builder
-    public GetContentReq(Header requestHeader, String contentCode) {
-        super(requestHeader);
+    public QueryContentReqOut(Header header, String contentCode, String contentType) {
+        super(header);
         this.contentCode = contentCode;
+        this.contentType = contentType;
     }
-    
-	/**
-	 * 内容唯一标识
-	 */
-	@NotBlank(message = "内容标识不能为空")
-	@Length(max = 32,message = "内容标识长度不能超过32位")
-	private String contentCode;
+
+    /**
+     * 内容唯一标识
+     */
+    @NotBlank(message = "内容标识不能为空")
+    private String contentCode;
+
+    /**
+     * 内容类型, 可选
+     */
+    private String contentType;
 }

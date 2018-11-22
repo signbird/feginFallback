@@ -1,8 +1,8 @@
 package org.bqf.content.controller;
 
+import org.bqf.common.dto.Result;
 import org.bqf.content.dto.GetContentReq;
 import org.bqf.content.dto.GetContentRsp;
-import org.bqf.content.dto.Result;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

@@ -30,11 +30,13 @@ hystrix:
           thread:
             timeoutInMilliseconds: 1000
             
+logging:
+  file: service-out.log
+  level:
+    org.bqf: DEBUG
+    org.springframework: WARN
+    
 fallback: 
-  ContentServiceImplAA: 
-    ContentQueryClient: contentQueryClient1
-  ProductServiceImpl: 
-    ContentQueryClient: contentQueryClient2
-    ProductMatchClient: productMatchClient1
+  useFallbackConfig: true
     
     

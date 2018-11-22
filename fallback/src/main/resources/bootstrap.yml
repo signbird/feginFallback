@@ -1,4 +1,4 @@
 spring:
   application:
-    name: service-client
+    name: fallback
     index: ${random.long}

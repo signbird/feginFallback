@@ -1,4 +1,4 @@
-package org.bqf.content.dto;
+package org.bqf.common.dto.inside;
 
 import org.bqf.common.dto.BaseRsp;
 import org.bqf.common.dto.Result;

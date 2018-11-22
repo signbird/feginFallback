@@ -1,7 +1,10 @@
-package org.bqf.content.dto;
+package org.bqf.common.dto.inside;
+
+import java.util.List;
 
 import org.bqf.common.dto.BaseRsp;
 import org.bqf.common.dto.Result;
+import org.bqf.common.fallback.FallbackConfig;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,27 +13,19 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
-/**
- * 类描述: 本类是查询内容详情信息响应
- */
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class GetContentRsp extends BaseRsp{
-    
+public class GetFallbackConfigRsp extends BaseRsp {
     private static final long serialVersionUID = 1L;
-    
-    @Builder
-    public GetContentRsp(Result result, String content) {
-        super(result);
-        this.content = content;
-    }
 
-    /**
-     * 内容信息
-     */
-	private String content;
+    @Builder
+    public GetFallbackConfigRsp(Result result, List<FallbackConfig> configs) {
+        super(result);
+        this.configs = configs;
+    }
+    
+    private List<FallbackConfig> configs;
 }

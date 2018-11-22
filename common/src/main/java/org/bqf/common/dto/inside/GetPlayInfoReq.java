@@ -1,9 +1,7 @@
-package org.bqf.content.dto;
+package org.bqf.common.dto.inside;
 
 import org.bqf.common.dto.BaseReq;
 import org.bqf.common.dto.Header;
-import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,27 +12,26 @@ import lombok.ToString;
 
 
 /**
- * 类描述: 本类是查询内容详情信息请求
+ * 类描述: 本类是获取播放及下载地址请求
  */
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class GetContentReq extends BaseReq{
+public class GetPlayInfoReq extends BaseReq{
     
     private static final long serialVersionUID = 1L;
-
+    
     @Builder
-    public GetContentReq(Header requestHeader, String contentCode) {
-        super(requestHeader);
+    public GetPlayInfoReq(Header header, String contentCode) {
+        super(header);
         this.contentCode = contentCode;
     }
     
-	/**
-	 * 内容唯一标识
-	 */
-	@NotBlank(message = "内容标识不能为空")
-	@Length(max = 32,message = "内容标识长度不能超过32位")
+
+    /**
+     * 内容唯一标识
+     */
 	private String contentCode;
 }
