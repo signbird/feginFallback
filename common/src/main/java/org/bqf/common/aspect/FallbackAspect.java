@@ -41,14 +41,14 @@ public class FallbackAspect {
     /**
      * 定义一个切点.
      */
-    @Pointcut("execution(public * org.bqf.test.controller.*.*(..))")
+    @Pointcut("execution(public * org.bqf.*.controller.*.*(..))")
     public void controller() {
     }
 
     /**
      * 定义一个切点.
      */
-    @Pointcut("execution(public * org.bqf.test.client.*.*(..))")
+    @Pointcut("execution(public * org.bqf.*.client.*.*(..))")
     public void client() {
     }
 
@@ -78,8 +78,8 @@ public class FallbackAspect {
         } catch (BizException bz) {
             clock.stop();
             if (isFallback(bz.getErrorCode())) {
-                FallbackConfig fallbackConfig = matchedControllerConfig(getRequestPath());
-                if (fallbackConfig != null && isMatchParams(reqInfo, fallbackConfig.getParams())) {
+                FallbackConfig fallbackConfig = matchedControllerConfig(getRequestPath(), reqInfo);
+                if (fallbackConfig != null) {
                     LOG.warn("[controller]error invoke method={}, use fallbackConfig rsp={}, costs={}ms", method, bz,
                             clock.getTotalTimeMillis());
                     return fallbackConfig.getResultValue();
@@ -101,12 +101,14 @@ public class FallbackAspect {
         return result;
     }
 
-    private FallbackConfig matchedControllerConfig(String path) {
+    private FallbackConfig matchedControllerConfig(String path, String reqInfo) {
         List<FallbackConfig> fallbackConfigs = FallbackConfigHelper.getFallbackConfigMap().get(path);
         if (!CollectionUtils.isEmpty(fallbackConfigs)) {
             for (FallbackConfig config : fallbackConfigs) {
                 if (config.getServiceName().equals(serviceName) && StringUtils.isEmpty(config.getClientName())) {
-                    return config;
+                    if (isMatchParams(reqInfo, config.getParams())){
+                        return config;
+                    }
                 }
             }
         }
@@ -200,6 +202,9 @@ public class FallbackAspect {
         Object result = null;
         try {
             result = jp.proceed();
+        } catch (BizException bz) {
+            clock.stop();
+            LOG.warn("error invoke client {} method={}, costs={}ms, BizException={}", clientServiceName, method, clock.getTotalTimeMillis(), bz.toString());
         } catch (Throwable e) {
             clock.stop();
             LOG.error("error when invoke client {} method={}, rsp={}, costs={}ms", clientServiceName, method, result, clock.getTotalTimeMillis(), e);
@@ -207,8 +212,8 @@ public class FallbackAspect {
         
         clock.stop();
         if (isFallback(getResultCodeFromRsp(result))){
-            FallbackConfig fallbackConfig = matchedClientConfig(getRequestPath(), getClientPath(jp), clientServiceName);
-            if (fallbackConfig != null && isMatchParams(args[0].toString(), fallbackConfig.getParams())){
+            FallbackConfig fallbackConfig = matchedClientConfig(getRequestPath(), getClientPath(jp), clientServiceName, args[0].toString());
+            if (fallbackConfig != null){
                 LOG.warn("end invoke client {} method={}, use fallbackConfig rsp={}, costs={}ms", clientServiceName, method, result, clock.getTotalTimeMillis());
                 return fallbackConfig.getResultValue();
             }
@@ -230,7 +235,13 @@ public class FallbackAspect {
     }
     
     private String getRequestPath() {
-        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        HttpServletRequest request = null;
+        try {
+            request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        }catch (Throwable e) {
+            // do nothing
+        }
+        
         return request == null ? null : request.getRequestURI();
     }
     
@@ -249,7 +260,7 @@ public class FallbackAspect {
         return null;
     }
 
-    private FallbackConfig matchedClientConfig(String controllerPath, String clientPath, String clientServiceName) {
+    private FallbackConfig matchedClientConfig(String controllerPath, String clientPath, String clientServiceName, String reqInfo) {
         if (StringUtils.isEmpty(controllerPath) || StringUtils.isEmpty(clientPath) || StringUtils.isEmpty(clientServiceName)){
             return null;
         }
@@ -259,7 +270,9 @@ public class FallbackAspect {
             for (FallbackConfig config : fallbackConfigs) {
                 if (config.getServiceName().equals(serviceName) && clientServiceName.equals((config.getClientName()))
                         && config.getClientPath().equals(clientPath)) {
-                    return config;
+                    if (isMatchParams(reqInfo, config.getParams())){
+                        return config;
+                    }
                 }
             }
         }

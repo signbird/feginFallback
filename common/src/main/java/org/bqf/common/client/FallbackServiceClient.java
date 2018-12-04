@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name = "fallback", fallbackFactory = FallbackServiceFallback.class)
+@FeignClient(name = "service-fallback", fallbackFactory = FallbackServiceFallback.class)
 @Qualifier("fallbackServiceClient")
 public interface FallbackServiceClient {
     

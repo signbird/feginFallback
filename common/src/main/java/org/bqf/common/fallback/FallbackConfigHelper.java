@@ -110,13 +110,15 @@ public class FallbackConfigHelper {
         Assert.notNull(config.getId(), "update FallbackConfig.id must not be null");
         
         int result = -1;
-        for (List<FallbackConfig> lists : fallbackConfigMap.values()){
-            for (FallbackConfig f : lists){
-                if (config.getId().equals(f.getId())){
-                    f = config;
-                    result = 1;
-                    break;
-                }
+        for (Map.Entry<String, List<FallbackConfig>> m : fallbackConfigMap.entrySet()){
+            List<FallbackConfig> cacheConfigs = m.getValue();
+            for (int i = 0; i < cacheConfigs.size(); i++){
+                if (cacheConfigs.get(i).getId().equals(config.getId())) {
+                  cacheConfigs.set(i, config);
+                  fallbackConfigMap.put(m.getKey(), cacheConfigs);
+                  result = 1;
+                  break;
+              }
             }
         }
         

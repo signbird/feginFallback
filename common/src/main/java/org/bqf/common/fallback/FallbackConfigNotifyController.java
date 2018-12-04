@@ -13,9 +13,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import springfox.documentation.annotations.ApiIgnore;
 
-
-// TODO common包里的controller，被业务侧引用时无法生效，待查
 @RestController
 @RequestMapping("/common/fallback")
 @Api(value = "降级配置更新时的通知接口")
@@ -24,6 +23,7 @@ public class FallbackConfigNotifyController {
     @Autowired
     private IFallbackConfigNotifyService fallbackNotifyService;
 
+    @ApiIgnore
     @RequestMapping(value = "/notify", produces = { "application/json" }, method = RequestMethod.POST)
     @ApiOperation(value = "服务降级配置更新后通知业务侧", notes = "FallbackConfigRspOut", response = FallbackConfigNotifyRsp.class)
     @ApiResponses(value = { @ApiResponse(code = 200, message = "返回", response = FallbackConfigNotifyRsp.class),

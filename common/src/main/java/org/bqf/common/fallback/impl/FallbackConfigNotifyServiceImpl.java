@@ -10,15 +10,22 @@ import org.bqf.common.fallback.IFallbackConfigNotifyService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSONObject;
+
 @Service
 public class FallbackConfigNotifyServiceImpl implements IFallbackConfigNotifyService{
 
-    // TODO 入口权限校验 + swagger上隐藏  （参数校验？。。。）
     @Override
     public FallbackConfigNotifyRsp notify(FallbackConfigNotifyReq req) {
 
         String notifyType = req.getNofityType();
         FallbackConfig config = req.getFallbackConfig();
+        
+        // fastJson将config中具体的Object类型反序列化成了JSONObject，需要再转回来。
+        if (config.getResultValue() != null){
+            Object resultObj = JSONObject.parseObject(config.getResultValue().toString(), config.getResultClass());
+            config.setResultValue(resultObj);
+        }
         
         FallbackConfigNotifyRsp rsp = new FallbackConfigNotifyRsp(
                 new Result(FallbackResultCode.SUCCESS.getCode(), FallbackResultCode.SUCCESS.getMsg()));

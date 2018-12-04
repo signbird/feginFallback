@@ -5,7 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.bqf.common.consts.FallbackResultCode;
 import org.bqf.common.dto.Result;
+import org.bqf.common.exception.BizException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -32,11 +34,19 @@ public class RStoneExceptionHandler {
     @ExceptionHandler(Throwable.class)
     public ModelAndView allExceptionHandler(final HttpServletRequest req, final Throwable ex) {
 
-        LOG.warn("handler Throwable Exception={}, reqURL={}", ex, req.getRequestURL());
-        Map<String, Result> resultMap = createErrorResult("8000099999", "系统内部错误");
+        LOG.debug("in RStoneExceptionHandler.allExceptionHandler, e={}", ex);
+        Map<String, Result> resultMap = null;
+        if (ex instanceof BizException){
+            BizException bz = (BizException)ex;
+            resultMap = createErrorResult(bz.getErrorCode(), bz.getErrorMsg());
+        }else {
+            resultMap = createErrorResult(FallbackResultCode.SYSTEM_ERROR.getCode(),
+                    FallbackResultCode.SYSTEM_ERROR.getMsg());
+        }
+       
         return new ModelAndView(new MappingJackson2JsonView(), resultMap);
     }
-
+    
     /**
      * 返回错误码
      *
